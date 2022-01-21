@@ -5,12 +5,12 @@
     <application android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".app.Tmdb"
+        android:name=".ui.app.Tmdb"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Tmdb"
         android:fullBackupContent="true">
-        <activity android:name=".MainActivity"
+        <activity android:name=".ui.trending.TrendingActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Tmdb.NoActionBar">

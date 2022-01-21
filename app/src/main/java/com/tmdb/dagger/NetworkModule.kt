@@ -1,5 +1,6 @@
 package com.tmdb.dagger
 
+import com.tmdb.network.ConfigurationService
 import com.tmdb.network.TrendingService
 import dagger.Module
 import dagger.Provides
@@ -10,7 +11,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 import okhttp3.HttpUrl
-
 import okhttp3.Interceptor
 import okhttp3.Request
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
@@ -53,4 +53,7 @@ class NetworkModule {
 
     @Provides
     fun provideTrendingService(retrofit: Retrofit): TrendingService = retrofit.create(TrendingService::class.java)
+
+    @Provides
+    fun provideConfigurationService(retrofit: Retrofit): ConfigurationService = retrofit.create(ConfigurationService::class.java)
 }

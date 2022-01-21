@@ -1,7 +1,9 @@
 package com.tmdb.data
 
+import com.tmdb.network.model.Configuration
 import com.tmdb.network.model.Movie
 import com.tmdb.cache.model.Movie as MovieCacheModel
+import com.tmdb.cache.model.Configuration as ConfigurationCacheModel
 
 fun List<Movie>.toCache() = this.map { movieResponse ->
     MovieCacheModel(
@@ -21,3 +23,5 @@ fun List<Movie>.toCache() = this.map { movieResponse ->
         voteAverage = movieResponse.voteAverage
     )
 }
+
+fun Configuration.toCache() = ConfigurationCacheModel(baseUrl = this.images.baseUrl)
