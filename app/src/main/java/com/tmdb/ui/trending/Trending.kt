@@ -18,7 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,29 +30,33 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.rememberImagePainter
 import com.tmdb.ui.app.TmdbAppBar
 import com.tmdb.ui.model.Movie
+import com.tmdb.ui.model.TmdbFilter
 import com.tmdb.ui.theme.tmdbColors
 import com.tmdb.ui.theme.tmdbTypography
 
+private const val NOT_A_NUMBER = "NaN"
+
 @Composable
-fun TrendingLayout(trendingMovies: List<Movie>) {
+fun TrendingLayout(trendingMovies: List<Movie>, onFilterSelected: (selectedFilter: TmdbFilter) -> Unit) {
     Scaffold(
         backgroundColor = MaterialTheme.colors.background,
         topBar = { TmdbAppBar() },
-        content = { innerPadding ->
-            BodyContent(
-                trendingMovies,
-                Modifier.padding(innerPadding))
+        content = {
+            BodyContent(trendingMovies, onFilterSelected = onFilterSelected)
         }
     )
 }
 
 @Composable
-fun BodyContent(movies: List<Movie>, modifier: Modifier = Modifier) {
-    Surface(modifier = modifier.fillMaxWidth()) {
+fun BodyContent(movies: List<Movie>, onFilterSelected: (selectedFilter: TmdbFilter) -> Unit) {
+    Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
+        TrendingFilters(modifier = Modifier.padding(top = 16.dp), onFilterSelected = onFilterSelected)
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(vertical = 16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp, bottom = 16.dp)
         ) {
             items(movies) { movie ->
                 MovieCard(movie)
@@ -88,7 +91,11 @@ fun MovieCard(movie: Movie) {
                     contentScale = ContentScale.Crop,
                 )
 
-                val ratingValue = if (movie.voteAverage > 0) movie.voteAverage.toString() else "NA"
+                val ratingValue = if (movie.voteAverage > 0) {
+                    movie.voteAverage.toString()
+                } else {
+                    NOT_A_NUMBER
+                }
                 CircleRating(
                     modifier = Modifier.constrainAs(rating) {
                         top.linkTo(poster.bottom)

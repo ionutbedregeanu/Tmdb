@@ -17,7 +17,12 @@ class TrendingActivity : ComponentActivity() {
         trendingViewModel = ViewModelProvider(this).get(TrendingViewModel::class.java)
         setContent {
             TmdbTheme {
-                TrendingLayout(trendingViewModel.trendingMovies)
+                TrendingLayout(
+                    trendingViewModel.trendingMovies,
+                    onFilterSelected = { selectedFilter ->
+                        trendingViewModel.updateTrendingFilter(selectedFilter.id)
+                    }
+                )
             }
         }
     }

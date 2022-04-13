@@ -9,5 +9,11 @@ data class TmdbColors(
     val textColor: Color,
     val cardColor: Color,
     val ratingBorder: Color = LightGreen,
-    val ratingBackground: Color
+    val ratingBackground: Color,
+    val filtersBarBackground: Color = Color.White,
+    val selectedFilterBackground: Color = DarkBlue,
+    val unselectedFilterBackground: Color = Color.White,
+    val selectedFilterContent: Color = Color.White,
+    val unselectedFilterContent: Color = DarkBlue,
+    val filtersBarBorder: Color = DarkBlue
 )

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Tmdb</string>
+    <string name="time_window_today">Today</string>
+    <string name="time_window_week">This week</string>
 </resources>
