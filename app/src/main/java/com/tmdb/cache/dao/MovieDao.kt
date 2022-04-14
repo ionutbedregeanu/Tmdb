@@ -14,6 +14,7 @@ abstract class MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertMovies(movies: List<Movie>): Completable
 
-    @Query("SELECT * FROM movies")
-    abstract fun getAllMovies(): Observable<List<Movie>>
+    @Query("SELECT * FROM movies WHERE trending = :timeWindow")
+    abstract fun getMoviesByTimeWindow(timeWindow: String): Observable<List<Movie>>
+
 }

@@ -19,5 +19,6 @@ data class Movie(
     val popularity: Float = 0f,
     val voteCount: Int = 0,
     val video: Boolean = false,
-    val voteAverage: Float = 0f
+    val voteAverage: Float = 0f,
+    val trending:String = ""
 )

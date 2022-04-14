@@ -1,7 +1,8 @@
 package com.tmdb.data
 
 import com.tmdb.cache.TmdbDatabase
-import com.tmdb.cache.model.Movie
+import com.tmdb.cache.model.Movie as CacheMovieModel
+import com.tmdb.network.model.Movie as NetworkMovieModel
 import com.tmdb.network.TrendingService
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -12,15 +13,20 @@ class TrendingRepository @Inject constructor(
     private val database: TmdbDatabase
 ) {
 
-    fun getTrendingMovies(mediaType: String, timeWindow: String): Observable<List<Movie>> =
+    fun getTrendingMovies(mediaType: String, timeWindow: String): Observable<List<CacheMovieModel>> =
         trendingService.getTrendingMovies(mediaType = mediaType, timeWindow = timeWindow)
             .subscribeOn(Schedulers.io())
-            .flatMapCompletable {
-                database.movieDao().insertMovies(movies = it.movies.filter { movie ->
-                    movie.title.isNotEmpty() && movie.originalTitle.isNotEmpty()
-                }.toCache())
-            }
-            .andThen(database.movieDao().getAllMovies())
-            .startWith(database.movieDao().getAllMovies().take(1))
+            .flatMapCompletable { trending -> insertTrendingMovies(trending.movies, timeWindow) }
+            .andThen(database.movieDao().getMoviesByTimeWindow(timeWindow))
+            .startWith(database.movieDao().getMoviesByTimeWindow(timeWindow).take(1))
             .share()
+
+    private fun insertTrendingMovies(movies: List<NetworkMovieModel>, timeWindow: String) =
+        database.movieDao().insertMovies(movies = movies
+            .filter { movie ->
+                movie.title.isNotEmpty() && movie.originalTitle.isNotEmpty()
+            }
+            .toCache()
+            .map { movie -> movie.copy(trending = timeWindow) }
+        )
 }
