@@ -43,7 +43,9 @@ private fun darkColorPalette():TmdbColors = TmdbColors(
     appBarBackground = DarkBlue,
     textColor = Color.White,
     cardColor = DarkBlue,
-    ratingBackground = DarkBlueA5
+    ratingBackground = DarkBlueA5,
+    filtersBarBorder = DarkBlueA5,
+    selectedFilterBackground = DarkBlue
 )
 
 private fun lightColorPalette():TmdbColors = TmdbColors(
@@ -51,7 +53,9 @@ private fun lightColorPalette():TmdbColors = TmdbColors(
     appBarBackground = LightBlue,
     textColor = Color.Black,
     cardColor = LightBlue,
-    ratingBackground = LightBlueA2
+    ratingBackground = LightBlueA2,
+    filtersBarBorder = LightBlue,
+    selectedFilterBackground = LightBlueA2
 )
 
 /**

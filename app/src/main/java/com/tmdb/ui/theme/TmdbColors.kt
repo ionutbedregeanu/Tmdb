@@ -11,9 +11,9 @@ data class TmdbColors(
     val ratingBorder: Color = LightGreen,
     val ratingBackground: Color,
     val filtersBarBackground: Color = Color.White,
-    val selectedFilterBackground: Color = DarkBlue,
+    val selectedFilterBackground: Color,
     val unselectedFilterBackground: Color = Color.White,
     val selectedFilterContent: Color = Color.White,
     val unselectedFilterContent: Color = DarkBlue,
-    val filtersBarBorder: Color = DarkBlue
+    val filtersBarBorder: Color
 )
