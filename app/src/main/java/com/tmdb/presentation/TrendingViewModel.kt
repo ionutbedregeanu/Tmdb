@@ -42,21 +42,23 @@ class TrendingViewModel @Inject constructor(
             }
         )
 
-    private fun getConfigurationBaseUrl() {
+    private fun getConfigurationBaseUrl(selectedFilterId: String = Week().id) {
         configurationRepository.getConfigurationBaseUrl().subscribeBy(
             onNext = { baseUrl ->
                 configurationBaseUrl = baseUrl + POSTER_SIZE
+                getTrendingMovies(selectedFilterId)
             },
             onError = {
                 error.value = TmdbError(enabled = true)
-            },
-            onComplete = {
-                getTrendingMovies(Week().id)
             }
         )
     }
 
     fun updateTrendingFilter(selectedFilterId: String) {
-        getTrendingMovies(selectedFilterId)
+        if (configurationBaseUrl == POSTER_SIZE) {
+            getConfigurationBaseUrl(selectedFilterId)
+        } else {
+            getTrendingMovies(selectedFilterId)
+        }
     }
 }

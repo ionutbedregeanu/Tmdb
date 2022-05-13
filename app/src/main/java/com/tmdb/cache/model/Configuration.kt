@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Configuration(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Int = 0,
     val baseUrl: String
 )
