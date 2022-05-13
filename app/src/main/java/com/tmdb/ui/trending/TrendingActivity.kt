@@ -18,7 +18,8 @@ class TrendingActivity : ComponentActivity() {
         setContent {
             TmdbTheme {
                 TrendingLayout(
-                    trendingViewModel.trendingMovies,
+                    trendingMovies = trendingViewModel.trendingMovies.value,
+                    error = trendingViewModel.error.value,
                     onFilterSelected = { selectedFilter ->
                         trendingViewModel.updateTrendingFilter(selectedFilter.id)
                     }

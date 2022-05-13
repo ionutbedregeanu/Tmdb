@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class ImagesConfigurations(
     @SerializedName("secure_base_url")
-    val baseUrl: String
+    val baseUrl: String = ""
 )

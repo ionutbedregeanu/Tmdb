@@ -40,4 +40,4 @@ private fun getUIDate(date: String): String {
 }
 
 private fun getPosterCompletePath(configurationBaseUrl: String, posterPath: String?) =
-    posterPath?.let { configurationBaseUrl + it } ?: ""
+    posterPath?.let { configurationBaseUrl + it }

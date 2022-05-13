@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,12 +25,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.rememberImagePainter
+import com.tmdb.R
 import com.tmdb.ui.app.TmdbAppBar
 import com.tmdb.ui.model.Movie
+import com.tmdb.ui.model.TmdbError
 import com.tmdb.ui.model.TmdbFilter
 import com.tmdb.ui.theme.tmdbColors
 import com.tmdb.ui.theme.tmdbTypography
@@ -37,30 +41,62 @@ import com.tmdb.ui.theme.tmdbTypography
 private const val NOT_A_NUMBER = "NaN"
 
 @Composable
-fun TrendingLayout(trendingMovies: List<Movie>, onFilterSelected: (selectedFilter: TmdbFilter) -> Unit) {
+fun TrendingLayout(
+    trendingMovies: List<Movie>,
+    error: TmdbError,
+    onFilterSelected: (selectedFilter: TmdbFilter) -> Unit
+) {
     Scaffold(
         backgroundColor = MaterialTheme.colors.background,
         topBar = { TmdbAppBar() },
         content = {
-            BodyContent(trendingMovies, onFilterSelected = onFilterSelected)
+            BodyContent(trendingMovies, error, onFilterSelected = onFilterSelected)
         }
     )
 }
 
 @Composable
-fun BodyContent(movies: List<Movie>, onFilterSelected: (selectedFilter: TmdbFilter) -> Unit) {
+fun BodyContent(movies: List<Movie>, error: TmdbError, onFilterSelected: (selectedFilter: TmdbFilter) -> Unit) {
     Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
         TrendingFilters(modifier = Modifier.padding(top = 16.dp), onFilterSelected = onFilterSelected)
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp, bottom = 16.dp)
-        ) {
-            items(movies) { movie ->
-                MovieCard(movie)
+        if (error.enabled) {
+            if (movies.isEmpty()) {
+                EmptyTrendingContent()
+            } else {
+                TrendingContent(movies)
             }
+        } else {
+            TrendingContent(movies)
+        }
+    }
+}
+
+@Composable
+fun EmptyTrendingContent() {
+    Box(modifier = Modifier
+        .fillMaxHeight()
+        .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            textAlign = TextAlign.Center,
+            style = tmdbTypography.materialTypography.subtitle2,
+            text = stringResource(id = R.string.trending_error_message)
+        )
+    }
+}
+
+@Composable
+fun TrendingContent(movies: List<Movie>) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp, bottom = 16.dp)
+    ) {
+        items(movies) { movie ->
+            MovieCard(movie)
         }
     }
 }
@@ -86,7 +122,13 @@ fun MovieCard(movie: Movie) {
                         .fillMaxWidth()
                         .height(328.dp)
                         .constrainAs(poster) {},
-                    painter = rememberImagePainter(movie.posterPath),
+                    painter = rememberImagePainter(
+                        data = movie.posterPath,
+                        builder = {
+                            placeholder(R.drawable.ic_broken_image)
+                            error(R.drawable.ic_broken_image)
+                        },
+                    ),
                     contentDescription = movie.title,
                     contentScale = ContentScale.Crop,
                 )
