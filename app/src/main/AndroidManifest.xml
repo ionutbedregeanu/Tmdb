@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Tmdb"
         android:fullBackupContent="true">
-        <activity android:name=".ui.trending.TrendingActivity"
+        <activity android:name=".ui.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Tmdb.NoActionBar">

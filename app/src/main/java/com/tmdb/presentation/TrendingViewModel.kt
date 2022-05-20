@@ -33,9 +33,13 @@ class TrendingViewModel @Inject constructor(
     }
 
     private fun getTrendingMovies(trendingFilterId: String) =
-        trendingRepository.getTrendingMovies(mediaType = MEDIA_TYPE, trendingFilterId).subscribeBy(
+        trendingRepository.getTrendingMovies(
+            mediaType = MEDIA_TYPE,
+            timeWindow = trendingFilterId,
+            configurationBaseUrl = configurationBaseUrl
+        ).subscribeBy(
             onNext = { movies ->
-                trendingMovies.value = movies.toUI(configurationBaseUrl)
+                trendingMovies.value = movies.toUI()
             },
             onError = {
                 error.value = TmdbError(enabled = true)

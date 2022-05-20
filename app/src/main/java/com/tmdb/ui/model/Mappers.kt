@@ -6,27 +6,27 @@ import java.util.Locale
 import com.tmdb.cache.model.Movie as MovieCacheModel
 import com.tmdb.ui.model.Movie as MovieUIModel
 
-fun List<MovieCacheModel>.toUI(configurationBaseUrl: String) = this.map { movieResponse ->
-    MovieUIModel(
-        posterPath = getPosterCompletePath(configurationBaseUrl = configurationBaseUrl, movieResponse.posterPath),
-        adult = movieResponse.adult,
-        overview = movieResponse.overview,
-        releaseDate = getUIDate(movieResponse.releaseDate),
-        genreIds = movieResponse.genreIds,
-        id = movieResponse.id,
-        originalLanguage = movieResponse.originalLanguage,
-        title = if (movieResponse.title.isNotEmpty()) {
-            movieResponse.title
-        } else {
-            movieResponse.originalTitle
-        },
-        backdropPath = movieResponse.backdropPath,
-        popularity = movieResponse.popularity,
-        voteCount = movieResponse.voteCount,
-        video = movieResponse.video,
-        voteAverage = movieResponse.voteAverage
-    )
+fun List<MovieCacheModel>.toUI() = this.map { movieResponse ->
+    movieResponse.toUI()
 }
+
+fun MovieCacheModel.toUI() = MovieUIModel(
+    posterPath = posterPath,
+    adult = adult,
+    overview = overview,
+    releaseDate = getUIDate(releaseDate),
+    genreIds = genreIds,
+    id = id,
+    originalLanguage = originalLanguage,
+    title = title.ifEmpty {
+        originalTitle
+    },
+    backdropPath = backdropPath,
+    popularity = popularity,
+    voteCount = voteCount,
+    video = video,
+    voteAverage = voteAverage
+)
 
 private fun getUIDate(date: String): String {
     val currentFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
@@ -38,6 +38,3 @@ private fun getUIDate(date: String): String {
         ""
     }
 }
-
-private fun getPosterCompletePath(configurationBaseUrl: String, posterPath: String?) =
-    posterPath?.let { configurationBaseUrl + it }

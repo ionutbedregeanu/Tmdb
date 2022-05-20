@@ -14,21 +14,21 @@ class TrendingRepository @Inject constructor(
     private val database: TmdbDatabase
 ) {
 
-    fun getTrendingMovies(mediaType: String, timeWindow: String): Observable<List<CacheMovieModel>> =
+    fun getTrendingMovies(mediaType: String, timeWindow: String, configurationBaseUrl: String): Observable<List<CacheMovieModel>> =
         trendingService.getTrendingMovies(mediaType = mediaType, timeWindow = timeWindow)
             .subscribeOn(Schedulers.io())
             .onErrorReturnItem(Trending())
-            .flatMapCompletable { trending -> insertTrendingMovies(trending.movies, timeWindow) }
+            .flatMapCompletable { trending -> insertTrendingMovies(trending.movies, timeWindow, configurationBaseUrl) }
             .andThen(database.movieDao().getMoviesByTimeWindow(timeWindow))
             .startWith(database.movieDao().getMoviesByTimeWindow(timeWindow).take(1))
             .share()
 
-    private fun insertTrendingMovies(movies: List<NetworkMovieModel>, timeWindow: String) =
+    private fun insertTrendingMovies(movies: List<NetworkMovieModel>, timeWindow: String, configurationBaseUrl: String) =
         database.movieDao().insertMovies(movies = movies
             .filter { movie ->
                 movie.title.isNotEmpty() && movie.originalTitle.isNotEmpty()
             }
-            .toCache()
+            .toCache(configurationBaseUrl)
             .map { movie -> movie.copy(trending = timeWindow) }
         )
 }

@@ -1,4 +1,4 @@
-package com.tmdb.ui.trending
+package com.tmdb.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -29,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.tmdb.R
 import com.tmdb.ui.app.TmdbAppBar
@@ -41,38 +43,44 @@ import com.tmdb.ui.theme.tmdbTypography
 private const val NOT_A_NUMBER = "NaN"
 
 @Composable
-fun TrendingLayout(
+fun Trending(
     trendingMovies: List<Movie>,
     error: TmdbError,
+    navController: NavController,
     onFilterSelected: (selectedFilter: TmdbFilter) -> Unit
 ) {
     Scaffold(
         backgroundColor = MaterialTheme.colors.background,
         topBar = { TmdbAppBar() },
         content = {
-            BodyContent(trendingMovies, error, onFilterSelected = onFilterSelected)
+            BodyContent(trendingMovies, error, navController, onFilterSelected)
         }
     )
 }
 
 @Composable
-fun BodyContent(movies: List<Movie>, error: TmdbError, onFilterSelected: (selectedFilter: TmdbFilter) -> Unit) {
+private fun BodyContent(
+    movies: List<Movie>,
+    error: TmdbError,
+    navController: NavController,
+    onFilterSelected: (selectedFilter: TmdbFilter) -> Unit
+) {
     Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
         TrendingFilters(modifier = Modifier.padding(top = 16.dp), onFilterSelected = onFilterSelected)
         if (error.enabled) {
             if (movies.isEmpty()) {
                 EmptyTrendingContent()
             } else {
-                TrendingContent(movies)
+                TrendingContent(movies, navController)
             }
         } else {
-            TrendingContent(movies)
+            TrendingContent(movies, navController)
         }
     }
 }
 
 @Composable
-fun EmptyTrendingContent() {
+private fun EmptyTrendingContent() {
     Box(modifier = Modifier
         .fillMaxHeight()
         .fillMaxWidth(),
@@ -87,7 +95,7 @@ fun EmptyTrendingContent() {
 }
 
 @Composable
-fun TrendingContent(movies: List<Movie>) {
+private fun TrendingContent(movies: List<Movie>, navController: NavController) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -96,19 +104,21 @@ fun TrendingContent(movies: List<Movie>) {
             .padding(top = 16.dp, bottom = 16.dp)
     ) {
         items(movies) { movie ->
-            MovieCard(movie)
+            MovieCard(movie, navController)
         }
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MovieCard(movie: Movie) {
+private fun MovieCard(movie: Movie, navController: NavController) {
     Card(
         shape = RoundedCornerShape(8.dp),
         backgroundColor = tmdbColors.cardColor,
         modifier = Modifier
             .width(250.dp)
-            .wrapContentHeight()
+            .wrapContentHeight(),
+        onClick = { navController.navigate(NavRoutes.MovieDetails.route.replace("{movieId}", movie.id.toString())) }
     ) {
         Column(
             modifier = Modifier

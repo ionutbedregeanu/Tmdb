@@ -5,9 +5,9 @@ import com.tmdb.network.model.Movie
 import com.tmdb.cache.model.Movie as MovieCacheModel
 import com.tmdb.cache.model.Configuration as ConfigurationCacheModel
 
-fun List<Movie>.toCache() = this.map { movieResponse ->
+fun List<Movie>.toCache(configurationBaseUrl: String) = this.map { movieResponse ->
     MovieCacheModel(
-        posterPath = movieResponse.posterPath,
+        posterPath = getPosterCompletePath(configurationBaseUrl = configurationBaseUrl, movieResponse.posterPath),
         adult = movieResponse.adult,
         overview = movieResponse.overview,
         releaseDate = movieResponse.releaseDate,
@@ -25,3 +25,5 @@ fun List<Movie>.toCache() = this.map { movieResponse ->
 }
 
 fun Configuration.toCache() = ConfigurationCacheModel(baseUrl = this.images.baseUrl)
+private fun getPosterCompletePath(configurationBaseUrl: String, posterPath: String?) =
+    posterPath?.let { configurationBaseUrl + it }

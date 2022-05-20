@@ -1,4 +1,4 @@
-package com.tmdb.ui.trending
+package com.tmdb.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
