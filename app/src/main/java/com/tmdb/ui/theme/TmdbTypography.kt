@@ -10,7 +10,9 @@ import androidx.compose.ui.unit.sp
 data class TmdbTypography(
     val materialTypography: Typography,
     val cardTitle: TextStyle,
-    val cardReleaseDate: TextStyle
+    val cardReleaseDate: TextStyle,
+    val movieDetailsTitle: TextStyle,
+    val movieDetailsDescription: TextStyle
 )
 
 val tmdbTypography: TmdbTypography
@@ -25,6 +27,16 @@ val tmdbTypography: TmdbTypography
         ),
         cardTitle = TextStyle(
             fontWeight = FontWeight.SemiBold,
+            fontSize = 16.sp,
+            color = tmdbColors.textColor
+        ),
+        movieDetailsTitle = TextStyle(
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            color = tmdbColors.textColor
+        ),
+        movieDetailsDescription = TextStyle(
+            fontWeight = FontWeight.Medium,
             fontSize = 16.sp,
             color = tmdbColors.textColor
         ),

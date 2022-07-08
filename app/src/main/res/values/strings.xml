@@ -3,4 +3,5 @@
     <string name="time_window_today">Today</string>
     <string name="time_window_week">This week</string>
     <string name="trending_error_message">An error occurred retrieving the results.</string>
+    <string name="back">Back</string>
 </resources>

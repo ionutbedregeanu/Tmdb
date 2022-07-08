@@ -5,8 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -17,6 +19,7 @@ import coil.compose.rememberImagePainter
 import com.tmdb.R
 import com.tmdb.ui.app.TmdbAppBar
 import com.tmdb.ui.model.Movie
+import com.tmdb.ui.theme.tmdbTypography
 
 @Composable
 fun MovieDetails(
@@ -25,7 +28,7 @@ fun MovieDetails(
 ) {
     Scaffold(
         backgroundColor = MaterialTheme.colors.background,
-        topBar = { TmdbAppBar() },
+        topBar = { TmdbAppBar(navController = navController) },
         content = {
             BodyContent(movie)
         }
@@ -49,6 +52,16 @@ fun BodyContent(movie: Movie) {
             ),
             contentDescription = movie.title,
             contentScale = ContentScale.Fit,
+        )
+        Text(
+            text = movie.title,
+            modifier = Modifier.padding(16.dp),
+            style = tmdbTypography.movieDetailsTitle
+        )
+        Text(
+            text = movie.overview,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+            style = tmdbTypography.movieDetailsDescription
         )
     }
 }
